@@ -1,7 +1,7 @@
 # Visual-Question-Answering
 ---
 > Team Avengers:
-> * Renjie Zhu
-> * Daoyu Li
-> * Zi He
-> * Houjian Yu
+> * Renjie Zhu (@renjiezhu)
+> * Daoyu Li (@Nwoodle)
+> * Zi He ()
+> * Houjian Yu ()
