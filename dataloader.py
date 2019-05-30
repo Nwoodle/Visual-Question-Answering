@@ -27,39 +27,20 @@ class VQADataset(td.Datasset):
                format(self.mode)
     
     def __getitem__(self, idx):
-        #TODO
+        # TODO GET TUPLE OF DATA
+        image_id = vqa_annotation[0]
+        question = vqa_annotation[1]
+        answer = vqa_annotation[2]
         img_path = os.path.join(self.images_dir, \
-                                self.data.iloc[idx]['file_path'])
-        bbox = self.data.iloc[idx][['x1', 'y1', 'x2', 'y2']]
+                                image_id)
         img = Image.open(img_path).convert('RGB')
-        img = img.crop([bbox[0], bbox[1], bbox[2], bbox[3]])
         transform = tv.transforms.Compose([
             tv.transforms.Resize(self.image_size),
             tv.transforms.ToTensor(),
             tv.transforms.Normalize([0.5,0.5,0.5],[0.5,0.5,0.5])
             ])
-        x = transform(img)
-        d = self.data.iloc[idx]['class']
-        return x, d
+        v = transform(img)
+        return v, question, answer
 
     def number_of_classes(self):
         return self.data['class'].max() + 1
-
-
-    def __getitem__(self, idx):
-        img_path = os.path.join(self.images_dir, \
-                                self.data.iloc[idx]['file_path'])
-        bbox = self.data.iloc[idx][['x1', 'y1', 'x2', 'y2']]
-        img = Image.open(img_path).convert('RGB')
-        img = img.crop([bbox[0], bbox[1], bbox[2], bbox[3]])
-        transform = tv.transforms.Compose([
-            tv.transforms.Resize(self.image_size),
-            tv.transforms.ToTensor(),
-            tv.transforms.Normalize([0.5,0.5,0.5],[0.5,0.5,0.5])
-            ])
-        x = transform(img)
-        d = self.data.iloc[idx]['class']
-        return x, d
-
-    def number_of_classes(self):
-        return self.data['class'].max() + 1        

@@ -44,16 +44,16 @@ class VQANet(NNClassifier):
         self.imagefeatures = vgg.features
         self.imageclassifier = vgg.classifier
         num_ftrs = vgg.classifier[6].in_features
-        self.imageclassifier[6] = nn.Linear(num_ftrs, 1000)
+        self.imageclassifier[6] = nn.Linear(num_ftrs, 1024)
 
         # Output Channel
-        self.combinefc = nn.Linear(1000,1000)
+        self.combinefc = nn.Linear(1024,1000)
 
 
     def forward(self, q, v):
         '''
         Args:
-            q: question tensor list with n 300 diemention tensors
+            q: question tensor list with n diemention tensors
             v: image
         Return:
             y: vector of answer
@@ -80,3 +80,22 @@ class VQANet(NNClassifier):
         y = F.Softmax(combineout)
 
         return y
+
+class VQAStatsManager(nt.StatsManager):
+
+    def __init__(self):
+        super(VQAStatsManager, self).__init__()
+
+    def init(self):
+        super(VQAStatsManager, self).init()
+        self.running_accuracy = 0
+
+    def accumulate(self, loss, x, y, d):
+        super(VQAStatsManager, self).accumulate(loss, x, y, d)
+        _, l = torch.max(y, 1)
+        self.running_accuracy += torch.mean((l == d).float())
+
+    def summarize(self):
+        loss = super(VQAStatsManager, self).summarize()
+        accuracy = 100 * self.running_accuracy / self.number_update
+        return {'loss': loss, 'accuracy': accuracy}

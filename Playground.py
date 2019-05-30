@@ -62,7 +62,8 @@ class VQANet(NNClassifier):
 
 #%%
 embeded = nn.Embedding(6, 3)
-lstminput = embeded(torch.tensor([1,1]))
+lstminput = embeded(torch.tensor([[1,1],[3,2]]))
+print(lstminput)
 #%%
 lstminput.view(2,1,-1).size()
 
