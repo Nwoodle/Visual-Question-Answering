@@ -1,12 +1,3 @@
-# Visual-Question-Answering
----
-> Team Avengers:
-> * Renjie Zhu ([@renjiezhu](https://github.com/renjiezhu))
-> * Daoyu Li ([@Nwoodle](https://github.com/Nwoodle))
-> * Zi He ()
-> * Houjian Yu ()
-
-
 Description
 ===========
 This is project A--Visual Question Answering developed by team Avengers composed of Renjie Zhu([@renjiezhu](https://github.com/renjiezhu)), Daoyu Li([@Nwoodle](https://github.com/Nwoodle)), Zi He and Houjian Yu
