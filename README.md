@@ -29,3 +29,8 @@ classifier.py -- Module for implementing forward propagation of the classifier
 base_model.py -- Module for creating a baseline model
 
 attention.py -- Module for introducing attention mechanism into the model 
+
+Usage
+=================
+
+Just open VQA baseline_bottom_up_attention.ipynb and it will helps you go through the entire process of training the model. It is originally built on DSMLP platform of UCSD. To accomodate a different environment, please go to the first line and change the root_dir where you put the raw data from VQA (please download via this link: https://visualqa.org/download.html).
