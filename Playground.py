@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 #%%
 
 
@@ -30,29 +27,44 @@ class NNClassifier(nt.NeuralNetwork):
 #%%
 class VQANet(NNClassifier):
 
-    def __init__(self, D, C=64):
+    def __init__(self, vocab_size, target_size, embedding=True, lstmdim=512):
+        '''
+        Args:
+            vocab_size: all the words used in the dictionary
+            target_size: output vector size
+            embedding: False if the input sentence is already embedded
+            lstmdim: the dim of the lstm
+        '''
         super(VQANet, self).__init__()
-        '''
-        '''
-        # 300 word embedding to 512 lstm imput
-        self.lstminput = nn.Linear(300,512)
+        # Input Embedding
+        if embedding:
+            self.word_embeddings = nn.Embedding(vocab_size)
+            
         # Question channel: LSTM for 512*512 with 1 hidden layer
-        self.lstm = nn.LSTM(512,512)
+        self.lstm = nn.LSTM(lstmdim, lstmdim)
         self.lstmoutput = nn.Linear(512,1024)
 
 
     def forward(self, q, v):
         '''
         Args:
-            q: question list with n 300 diemention tensors
+            q: question tensor list with n 300 diemention tensors
             v: image
         Return:
             y: vector of answer
+        Note:
+            In the pytoch documentation, the lstm input is reshaped using view(len(sentence), 1, -1) 
         '''
+
 
 
         return y
 
 #%%
-torch.LongTensor([[0,2,0,5]])
+embeded = nn.Embedding(6, 3)
+lstminput = embeded(torch.tensor([1,1]))
+#%%
+lstminput.view(2,1,-1).size()
+
+
 #%%

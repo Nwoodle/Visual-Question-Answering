@@ -1,3 +1,82 @@
 '''
-This is the model for VQA
+The model for VQA
 '''
+import os
+import torch
+from torch import nn
+from torch.nn import functional as F
+import torchvision as tv
+import nntools as nt
+
+class NNClassifier(nt.NeuralNetwork):
+
+    def __init__(self):
+        super(NNClassifier, self).__init__()
+        self.cross_entropy = nn.CrossEntropyLoss()
+
+    def criterion(self, y, d):
+        return self.cross_entropy(y, d)
+
+class VQANet(NNClassifier):
+
+    def __init__(self, vocab_size, target_size, embedding=True, lstmdim=512):
+        '''
+        Args:
+            vocab_size: all the words used in the dictionary
+            target_size: output vector size
+            embedding: False if the input sentence is already embedded
+            lstmdim: the dim of the lstm
+        '''
+        super(VQANet, self).__init__()
+        # Question Channel
+        # Input Embedding
+        if embedding:
+            self.word_embeddings = nn.Embedding(vocab_size, lstmdim)
+            
+        # Question channel: LSTM for 512*512 with 1 hidden layer
+        self.lstm = nn.LSTM(lstmdim, lstmdim)
+        self.lstmoutput = nn.Linear(lstmdim,1024)
+        
+        # Image Channel
+        vgg = tv.models.vgg16_bn(pretrained=True)
+        for param in vgg.parameters():
+            param.requires_grad = fine_tuning
+        self.imagefeatures = vgg.features
+        self.imageclassifier = vgg.classifier
+        num_ftrs = vgg.classifier[6].in_features
+        self.imageclassifier[6] = nn.Linear(num_ftrs, 1000)
+
+        # Output Channel
+        self.combinefc = nn.Linear(1000,1000)
+
+
+    def forward(self, q, v):
+        '''
+        Args:
+            q: question tensor list with n 300 diemention tensors
+            v: image
+        Return:
+            y: vector of answer
+        Note:
+            In the pytoch documentation, the lstm input is reshaped using view(len(sentence), 1, -1) 
+        '''
+        # Question Channel
+        if embedding:
+            embeds = self.word_embeddings(q)
+        else:
+            embeds = q
+        lstmout, _ = self.lstm(embeds.view(len(q), 1, -1))
+        lstmout = self.lstmoutput(lstmout)
+        lstmout = F.Tanh(lstmout)
+        
+        # Image Channel
+        imageout = self.imagefeatures(v)
+        imageout = imageout.view(imageout.size(0), -1)
+        imageout = self.imageclassifier(imageout)
+
+        # Combine two channel together
+        combineout = lstmout * imageout
+        combineout = self.combinefc(combineout)
+        y = F.Softmax(combineout)
+
+        return y
