@@ -9,6 +9,7 @@ from torch.nn import functional as F
 import torch.utils.data as td
 import torchvision as tv
 import nntools as nt
+import json
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(device)
 
@@ -67,5 +68,15 @@ print(lstminput)
 #%%
 lstminput.view(2,1,-1).size()
 
+
+#%%
+with open("train_qna.json", 'r') as fd:
+    qna = json.load(fd)
+len(qna)
+
+#%%
+with open("vocab.json", 'r') as fd:
+    vocab = json.load(fd)
+vocab['answer']['yes']
 
 #%%

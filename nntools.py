@@ -257,15 +257,15 @@ class Experiment(object):
         for epoch in range(start_epoch, num_epochs):
             s = time.time()
             self.stats_manager.init()
-            for x, d in self.train_loader:
-                x, d = x.to(self.net.device), d.to(self.net.device)
+            for v, q, a in self.train_loader:
+                v, q, a = v.to(self.net.device), q.to(self.net.device), a.to(self.net.device)
                 self.optimizer.zero_grad()
-                y = self.net.forward(x)
+                y = self.net.forward(q, v)
                 loss = self.net.criterion(y, d)
                 loss.backward()
                 self.optimizer.step()
                 with torch.no_grad():
-                    self.stats_manager.accumulate(loss.item(), x, y, d)
+                    self.stats_manager.accumulate(loss.item(), y, d)
             if not self.perform_validation_during_training:
                 self.history.append(self.stats_manager.summarize())
             else:

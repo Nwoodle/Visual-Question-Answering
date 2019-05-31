@@ -19,11 +19,11 @@ class NNClassifier(nt.NeuralNetwork):
 
 class VQANet(NNClassifier):
 
-    def __init__(self, vocab_size, target_size, embedding=True, lstmdim=512):
+    def __init__(self, vocab_size, embedding=True, lstmdim=512):
         '''
         Args:
             vocab_size: all the words used in the dictionary
-            target_size: output vector size
+            # target_size: output vector size
             embedding: False if the input sentence is already embedded
             lstmdim: the dim of the lstm
         '''
@@ -40,7 +40,7 @@ class VQANet(NNClassifier):
         # Image Channel
         vgg = tv.models.vgg16_bn(pretrained=True)
         for param in vgg.parameters():
-            param.requires_grad = fine_tuning
+            param.requires_grad = False
         self.imagefeatures = vgg.features
         self.imageclassifier = vgg.classifier
         num_ftrs = vgg.classifier[6].in_features
@@ -61,10 +61,11 @@ class VQANet(NNClassifier):
             In the pytoch documentation, the lstm input is reshaped using view(len(sentence), 1, -1) 
         '''
         # Question Channel
-        if embedding:
-            embeds = self.word_embeddings(q)
-        else:
-            embeds = q
+        # if embedding:
+        #     embeds = self.word_embeddings(q)
+        # else:
+        #     embeds = q
+        embeds = q
         lstmout, _ = self.lstm(embeds.view(len(q), 1, -1))
         lstmout = self.lstmoutput(lstmout)
         lstmout = F.Tanh(lstmout)
@@ -90,8 +91,8 @@ class VQAStatsManager(nt.StatsManager):
         super(VQAStatsManager, self).init()
         self.running_accuracy = 0
 
-    def accumulate(self, loss, x, y, d):
-        super(VQAStatsManager, self).accumulate(loss, x, y, d)
+    def accumulate(self, loss, y, d):
+        super(VQAStatsManager, self).accumulate(loss, y, d)
         _, l = torch.max(y, 1)
         self.running_accuracy += torch.mean((l == d).float())
 

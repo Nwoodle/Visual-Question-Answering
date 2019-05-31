@@ -15,3 +15,8 @@ Annotation JSON:
 Training and testing images
 
 >./mscoco
+
+---
+## Running the model:
+1. Run v_preprocess.py to generate train_qna.json
+2. Run v_preprocess.py to genearte the vocab.json
