@@ -41,6 +41,7 @@ class VQADataset(td.Dataset):
         
         with open(self.data_dir, 'r') as fd:
             self.data = json.load(fd)
+        self.data = self.data[1:5000]
         self.maxqlen = 0
         for annotation in self.data:
             if len(annotation[2])>self.maxqlen:
@@ -64,7 +65,6 @@ class VQADataset(td.Dataset):
         answer_word = self.data[idx][3]
         qlen = len(question_word)
         question = []
-        answer = torch.zeros(self.answer_num)
         for word in question_word:
             question.append(self.vocab['question'][word])
         question = torch.tensor(question)
@@ -73,11 +73,10 @@ class VQADataset(td.Dataset):
         question_padding = torch.zeros([self.maxqlen-qlen,512])
         question = torch.cat((question_padding,question))
         try:
-            answeridx = self.vocab['answer'][answer_word]
+            answer = self.vocab['answer'][answer_word]
         except:
-            answeridx = -1
-        if answeridx != -1:
-            answer[answeridx] = 1
+            answer = -1
+        answer = torch.tensor(answer)
         img_path = os.path.join(self.images_dir, image_name)
         img = Image.open(img_path)
         img = img.convert('RGB')

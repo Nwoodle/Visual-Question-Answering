@@ -80,3 +80,6 @@ with open("vocab.json", 'r') as fd:
 vocab['answer']['yes']
 
 #%%
+torch.randn(1,2,3).size()
+
+#%%

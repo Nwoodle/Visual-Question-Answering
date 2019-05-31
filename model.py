@@ -34,7 +34,7 @@ class VQANet(NNClassifier):
             self.word_embeddings = nn.Embedding(vocab_size, lstmdim)
             
         # Question channel: LSTM for 512*512 with 1 hidden layer
-        self.lstm = nn.LSTM(lstmdim, lstmdim)
+        self.lstm = nn.LSTM(lstmdim, lstmdim, batch_first=True)
         self.lstmoutput = nn.Linear(lstmdim,1024)
         
         # Image Channel
@@ -49,6 +49,7 @@ class VQANet(NNClassifier):
         # Output Channel
         self.combinefc = nn.Linear(1024,1000)
 
+    # def init_hidden(self):
 
     def forward(self, q, v):
         '''
@@ -65,10 +66,15 @@ class VQANet(NNClassifier):
         #     embeds = self.word_embeddings(q)
         # else:
         #     embeds = q
+        # embeds = q[0,:,:]
         embeds = q
-        lstmout, _ = self.lstm(embeds.view(len(q), 1, -1))
+        # v = v[0,:,:]
+        lstmout, _ = self.lstm(embeds)
+        lstmout = lstmout[:,0,:]
+        # lstmout, _ = self.lstm(embeds.view(len(embeds), 1, -1))
         lstmout = self.lstmoutput(lstmout)
-        lstmout = F.Tanh(lstmout)
+        # lstmout = lstmout.view(lstmout.size(0),-1)
+        lstmout = F.tanh(lstmout)
         
         # Image Channel
         imageout = self.imagefeatures(v)
@@ -78,7 +84,7 @@ class VQANet(NNClassifier):
         # Combine two channel together
         combineout = lstmout * imageout
         combineout = self.combinefc(combineout)
-        y = F.Softmax(combineout)
+        y = F.softmax(combineout)
 
         return y
 

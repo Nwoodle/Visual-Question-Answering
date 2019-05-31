@@ -261,11 +261,11 @@ class Experiment(object):
                 v, q, a = v.to(self.net.device), q.to(self.net.device), a.to(self.net.device)
                 self.optimizer.zero_grad()
                 y = self.net.forward(q, v)
-                loss = self.net.criterion(y, d)
+                loss = self.net.criterion(y, a)
                 loss.backward()
                 self.optimizer.step()
                 with torch.no_grad():
-                    self.stats_manager.accumulate(loss.item(), y, d)
+                    self.stats_manager.accumulate(loss.item(), y, a)
             if not self.perform_validation_during_training:
                 self.history.append(self.stats_manager.summarize())
             else:
