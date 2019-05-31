@@ -25,7 +25,7 @@ import nntools as nt
 train_set = VQADataset()
 val_set = train_set
 #%%
-train_loader = td.DataLoader(train_set, batch_size=500, shuffle=True)
+train_loader = td.DataLoader(train_set, batch_size=1, shuffle=True)
 
 #%%
 vocab_size = train_set.get_vocabsize()
