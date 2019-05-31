@@ -84,7 +84,7 @@ class VQANet(NNClassifier):
         # Combine two channel together
         combineout = lstmout * imageout
         combineout = self.combinefc(combineout)
-        y = F.softmax(combineout)
+        y = F.softmax(combineout, dim=0)
 
         return y
 
