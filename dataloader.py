@@ -1,23 +1,41 @@
 '''
 The datalodaer for vqa
 '''
+import json
+import os
+import os.path
+import re
+
+from PIL import Image
+import h5py
+import torch
 import torch.utils.data as td
+import torchvision.transforms as transforms
 
-class VQADataset(td.Datasset):
+import config
+import utils
 
-    def __init__(self, mode="train", image_size=(224, 224)):
+class VQADataset(td.Dataset):
+
+    def __init__(self, questions_path, answers_path, image_features_path, answerable_only=False, mode="train", image_size=(224, 224)):
+        
         super(VQADataset, self).__init__()
+
         self.image_size = image_size
         self.mode = mode
+
         if mode == "train":
-            self.images_dir = os.path.join("mscoco", "train2014")
+            self.images_dir = utils.path_for(train=True)
             self.data = #TODO
         if mode == "test":
-            self.images_dir = os.path.join("mscoco", "test2015")
+            self.images_dir = utils.path_for(test=True)
             self.data = #TODO
         if mode == "val":
-            self.images_dir = os.path.join("mscoco", "val2014")
+            self.images_dir = utils.path_for(val=True)
             self.data = #TODO
+
+
+
 
     def __len__(self):
         return len(self.data)
