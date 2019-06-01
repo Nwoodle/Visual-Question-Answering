@@ -58,7 +58,9 @@ class VQADataset(td.Dataset):
                 except:
                     qadata[2].append(0)
             try:
-                qadata[3] = self.vocab['answer'][qadata[3]]
+                answer = copy.copy(qadata[3])
+                answer = answer.split(' ')
+                qadata[3] = self.vocab['answer'][answer[0]]
             except:
                 qadata[3] = 0
         
