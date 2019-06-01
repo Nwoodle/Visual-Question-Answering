@@ -286,10 +286,10 @@ class Experiment(object):
         self.stats_manager.init()
         self.net.eval()
         with torch.no_grad():
-            for x, d in self.val_loader:
-                x, d = x.to(self.net.device), d.to(self.net.device)
-                y = self.net.forward(x)
-                loss = self.net.criterion(y, d)
-                self.stats_manager.accumulate(loss.item(), x, y, d)
+            for v, q, a in self.val_loader:
+                v, q, a = v.to(self.net.device), q.to(self.net.device), a.to(self.net.device)
+                y = self.net.forward(q, v)
+                loss = self.net.criterion(y, a)
+                self.stats_manager.accumulate(loss.item(), y, a)
         self.net.train()
         return self.stats_manager.summarize()
