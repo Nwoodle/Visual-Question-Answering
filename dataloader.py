@@ -91,8 +91,9 @@ class VQADataset(td.Dataset):
         answer = self.data[idx][3]
         word_embeddings = nn.Embedding(len(self.vocab['question']), 512)
         question = word_embeddings(question)
-        question_padding = torch.zeros([self.maxqlen-qlen,512])
-        question = torch.cat((question_padding,question))
+        question_padding = torch.zeros([self.maxqlen,512])
+        # question = torch.cat((question_padding,question))
+        question_padding[(self.maxqlen-qlen):,:] = question
         # try:
         #     answer = self.vocab['answer'][answer_word]
         # except:
@@ -108,7 +109,7 @@ class VQADataset(td.Dataset):
             ])
         v = transform(img)
         # print(v.size())
-        return v, question, answer
+        return v, question_padding, answer
     
     def get_vocabsize(self):
         return len(self.vocab['question'])

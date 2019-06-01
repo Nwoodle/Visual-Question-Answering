@@ -70,9 +70,9 @@ class VQANet(NNClassifier):
         # embeds = q[0,:,:]
         embeds = q
         # v = v[0,:,:]
-        lstmout, (_, _) = self.lstm(embeds)
-        # lstmout = lstmout.squeeze(0)
-        lstmout = lstmout[:,-1,:]
+        _, (lstmout,_) = self.lstm(embeds)
+        lstmout = lstmout.squeeze(0)
+        # lstmout = lstmout[:,-1,:]
         # lstmout, _ = self.lstm(embeds.view(len(embeds), 1, -1))
         lstmout = self.lstmoutput(lstmout)
         # lstmout = lstmout.view(lstmout.size(0),-1)
