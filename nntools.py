@@ -262,7 +262,7 @@ class Experiment(object):
                 self.optimizer.zero_grad()
                 y = self.net.forward(q, v)
                 loss = self.net.criterion(y, a)
-                loss.backward()
+                loss.backward(retain_graph=True)
                 self.optimizer.step()
                 with torch.no_grad():
                     self.stats_manager.accumulate(loss.item(), y, a)

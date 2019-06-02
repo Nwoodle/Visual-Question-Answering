@@ -33,8 +33,9 @@ class VQANet(NNClassifier):
         if embedding:
             self.word_embeddings = nn.Embedding(vocab_size, lstmdim)
             
+        self.lstmdim = lstmdim
         # Question channel: LSTM for 512*512 with 1 hidden layer
-        self.lstm = nn.LSTM(lstmdim, lstmdim, batch_first=True)
+        self.gru = nn.GRU(lstmdim, lstmdim, batch_first=True)
         self.lstmoutput = nn.Linear(lstmdim,1024)
         
         # Image Channel
@@ -46,7 +47,8 @@ class VQANet(NNClassifier):
         num_ftrs = vgg.classifier[6].in_features
         self.imageclassifier[6] = nn.Linear(num_ftrs, 1024)
         # self.vggout = nn.Linear(num_ftrs, 1024)
-
+        self.inited = False
+        # self.hidden = torch.randn(len(sentence), 1, lstmdim)
         # Output Channel
         self.combinefc = nn.Linear(1024,1000)
 
@@ -70,13 +72,17 @@ class VQANet(NNClassifier):
         # embeds = q[0,:,:]
         embeds = q
         # v = v[0,:,:]
-        lstmout, (_, _) = self.lstm(embeds)
+        # lstmout, (_, _) = self.lstm(embeds)
+        if not self.inited:
+            self.hidden = torch.randn( 1, embeds.size(0), self.lstmdim).to('cuda')
+            self.inited = True
+        lstmout, self.hidden = self.gru(embeds, self.hidden)
         # lstmout = lstmout.squeeze(0)
         lstmout = lstmout[:,-1,:]
         # lstmout, _ = self.lstm(embeds.view(len(embeds), 1, -1))
         lstmout = self.lstmoutput(lstmout)
         # lstmout = lstmout.view(lstmout.size(0),-1)
-        lstmout = F.tanh(lstmout)
+        lstmout = torch.tanh(lstmout)
         
         # Image Channel
         imageout = self.imagefeatures(v)
