@@ -57,7 +57,6 @@ class VQADataset(td.Dataset):
             qadata[2] = []
             for qword in question:
                 qadata[2].append(word2embedding(qword))
-                print(word2embedding(qword).size)
 
                 # try:
                 #     qadata[2].append(self.vocab['question'][qword])

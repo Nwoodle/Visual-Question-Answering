@@ -42,6 +42,7 @@ class VQANet(NNClassifier):
         for param in vgg.parameters():
             param.requires_grad = False
         self.imagefeatures = vgg.features
+        self.avgpool = vgg.avgpool
         self.imageclassifier = vgg.classifier
         num_ftrs = vgg.classifier[6].in_features
         self.imageclassifier[6] = nn.Linear(num_ftrs, 1024)
@@ -86,6 +87,7 @@ class VQANet(NNClassifier):
         
         # Image Channel
         imageout = self.imagefeatures(v)
+        imageout = self.avgpool(imageout)
         imageout = imageout.view(imageout.size(0), -1)
         imageout = self.imageclassifier(imageout)
         # imageout = self.vggout(imageout)
