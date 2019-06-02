@@ -43,7 +43,7 @@ class VQADataset(td.Dataset):
         
         with open(self.data_dir, 'r') as fd:
             self.data = json.load(fd)
-        self.data = self.data[1:4096]
+        self.data = self.data[1:10000]
         self.maxqlen = 0
         for annotation in self.data:
             if len(annotation[2])>self.maxqlen:
