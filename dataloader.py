@@ -17,9 +17,11 @@ import config
 import utils
 import copy
 
+from glove import word2embedding
+
 class VQADataset(td.Dataset):
 
-    def __init__(self, mode="train", image_size=(224, 224), answer_num=1000, lstmdim = 128):
+    def __init__(self, mode="train", image_size=(224, 224), answer_num=1000, lstmdim = 100):
         
         super(VQADataset, self).__init__()
 
@@ -29,15 +31,15 @@ class VQADataset(td.Dataset):
         self.lstmdim = lstmdim
 
         if mode == "train":
-            self.images_dir = os.path.join('mscoco', 'train2014')
+            self.images_dir = os.path.join('C:\\Users\\johns\\285proj\\dataset', 'train2014')
             self.data_dir = "train_qna.json"
             self.imageprefix = 'COCO_train2014_'
         if mode == "test":
-            self.images_dir = os.path.join('mscoco', 'test2015')
+            self.images_dir = os.path.join('C:\\Users\\johns\\285proj\\dataset', 'test2015')
             self.imageprefix = 'COCO_test2015_'
-            # self.data = #TODO
+            self.data_dir = "val_qna.json"
         if mode == "val":
-            self.images_dir = os.path.join('mscoco', 'val2014')
+            self.images_dir = os.path.join('C:\\Users\\johns\\285proj\\dataset', 'val2014')
             self.imageprefix = 'COCO_val2014_'
             self.data_dir = "val_qna.json"
         
@@ -54,10 +56,14 @@ class VQADataset(td.Dataset):
             question = copy.copy(qadata[2])
             qadata[2] = []
             for qword in question:
-                try:
-                    qadata[2].append(self.vocab['question'][qword])
-                except:
-                    qadata[2].append(0)
+                qadata[2].append(word2embedding(qword))
+                print(word2embedding(qword).size)
+
+                # try:
+                #     qadata[2].append(self.vocab['question'][qword])
+                # except:
+                #     qadata[2].append(0)
+
             try:
                 answer = copy.copy(qadata[3])
                 answer = answer.split(' ')
@@ -90,8 +96,8 @@ class VQADataset(td.Dataset):
         question = self.data[idx][2]
         question = torch.tensor(question)
         answer = self.data[idx][3]
-        word_embeddings = nn.Embedding(len(self.vocab['question']), self.lstmdim)
-        question = word_embeddings(question)
+        # word_embeddings = nn.Embedding(len(self.vocab['question']), self.lstmdim)
+        # question = word_embeddings(question)
         question_padding = torch.zeros([self.maxqlen,self.lstmdim])
         # question = torch.cat((question_padding,question))
         question_padding[(self.maxqlen-qlen):,:] = question

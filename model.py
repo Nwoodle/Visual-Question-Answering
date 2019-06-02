@@ -19,7 +19,7 @@ class NNClassifier(nt.NeuralNetwork):
 
 class VQANet(NNClassifier):
 
-    def __init__(self, vocab_size, embedding=True, lstmdim=128):
+    def __init__(self, vocab_size, embedding=True, lstmdim=100):
         '''
         Args:
             vocab_size: all the words used in the dictionary
@@ -48,7 +48,13 @@ class VQANet(NNClassifier):
         # self.vggout = nn.Linear(num_ftrs, 1024)
 
         # Output Channel
-        self.combinefc = nn.Linear(1024,1000)
+        self.combinefc = nn.Sequential(nn.Linear(1024, 1000),
+                                nn.ReLU(True),
+                                nn.Dropout(0.5))
+
+        # self.drop = nn.Dropout(0.5)
+
+        self.fc1 = nn.Linear(1000, 1000)
 
     # def init_hidden(self):
 
@@ -76,7 +82,7 @@ class VQANet(NNClassifier):
         # lstmout, _ = self.lstm(embeds.view(len(embeds), 1, -1))
         lstmout = self.lstmoutput(lstmout)
         # lstmout = lstmout.view(lstmout.size(0),-1)
-        lstmout = F.tanh(lstmout)
+        lstmout = torch.tanh(lstmout)
         
         # Image Channel
         imageout = self.imagefeatures(v)
@@ -87,6 +93,7 @@ class VQANet(NNClassifier):
         # Combine two channel together
         combineout = lstmout * imageout
         combineout = self.combinefc(combineout)
+        combineout = self.fc1(combineout)
         y = F.softmax(combineout, dim=0)
 
         return y
