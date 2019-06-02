@@ -57,8 +57,9 @@ lr = 5e-5
 VQA_model = VQA_model.to(device)
 adam = torch.optim.Adam(VQA_model.parameters(), lr=lr)
 stats_manager = VQAStatsManager()
+output_path = os.path.join('checkpoint','06012235')
 VQA_train = nt.Experiment(VQA_model, train_set, train_set, adam, stats_manager,
-               output_dir="vqa_train2", perform_validation_during_training=False)
+               output_dir=output_path, perform_validation_during_training=False)
 
 
 # In[7]:
