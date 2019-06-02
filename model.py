@@ -19,7 +19,7 @@ class NNClassifier(nt.NeuralNetwork):
 
 class VQANet(NNClassifier):
 
-    def __init__(self, vocab_size, embedding=True, lstmdim=512):
+    def __init__(self, vocab_size, embedding=True, lstmdim=128):
         '''
         Args:
             vocab_size: all the words used in the dictionary

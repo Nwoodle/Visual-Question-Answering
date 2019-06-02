@@ -19,13 +19,14 @@ import copy
 
 class VQADataset(td.Dataset):
 
-    def __init__(self, mode="train", image_size=(224, 224), answer_num=1000):
+    def __init__(self, mode="train", image_size=(224, 224), answer_num=1000, lstmdim = 128):
         
         super(VQADataset, self).__init__()
 
         self.image_size = image_size
         self.mode = mode
         self.answer_num = answer_num
+        self.lstmdim = lstmdim
 
         if mode == "train":
             self.images_dir = os.path.join('mscoco', 'train2014')
@@ -89,9 +90,9 @@ class VQADataset(td.Dataset):
         question = self.data[idx][2]
         question = torch.tensor(question)
         answer = self.data[idx][3]
-        word_embeddings = nn.Embedding(len(self.vocab['question']), 512)
+        word_embeddings = nn.Embedding(len(self.vocab['question']), self.lstmdim)
         question = word_embeddings(question)
-        question_padding = torch.zeros([self.maxqlen,512])
+        question_padding = torch.zeros([self.maxqlen,self.lstmdim])
         # question = torch.cat((question_padding,question))
         question_padding[(self.maxqlen-qlen):,:] = question
         # try:
