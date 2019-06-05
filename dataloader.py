@@ -43,7 +43,9 @@ class VQADataset(td.Dataset):
         if mode == "val":
             self.images_dir = os.path.join('C:\\Users\\johns\\285proj\\dataset', 'val2014')
             self.imageprefix = 'COCO_val2014_'
-            self.data_dir = "val_qna.json"
+            # self.data_dir = "val_qna.json"
+            self.data_dir = "val_qna_multi.json"
+
         
         with open(self.data_dir, 'r') as fd:
             self.data = json.load(fd)

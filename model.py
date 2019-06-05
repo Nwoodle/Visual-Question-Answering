@@ -112,7 +112,13 @@ class VQAStatsManager(nt.StatsManager):
     def accumulate(self, loss, y, d):
         super(VQAStatsManager, self).accumulate(loss, y, d)
         _, l = torch.max(y, 1)
-        self.running_accuracy += torch.mean((l == d).float())
+        # self.running_accuracy += torch.mean((l == d).float())
+        if isinstance(d, list):
+            print("in evaluation `accumulation`: ", d)
+            self.running_accuracy += torch.mean((l in d).float())
+        else:
+            self.running_accuracy += torch.mean((l == d).float())
+
 
     def summarize(self):
         loss = super(VQAStatsManager, self).summarize()
