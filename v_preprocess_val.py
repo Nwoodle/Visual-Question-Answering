@@ -10,9 +10,9 @@ import config
 import json
 import os
 
-qpath = os.path.join('vqa','v2_OpenEnded_mscoco_val2014_questions.json')
-apath = os.path.join('vqa','v2_mscoco_val2014_annotations.json')
-savename = 'val_qna.json'
+qpath = os.path.join('C:\\Users\\johns\\285proj\\dataset','v2_OpenEnded_mscoco_val2014_questions.json')
+apath = os.path.join('C:\\Users\\johns\\285proj\\dataset','v2_mscoco_val2014_annotations.json')
+savename = 'val_qna_multi.json'
 # questions
 with open(qpath ,'r') as f:
     questions_json = json.load(f)
@@ -35,10 +35,12 @@ dataset_answ = []
 for answer_dict in lad:
     iid = answer_dict['image_id']
     qid = answer_dict['question_id']
+    ans = []
     for answer in answer_dict['answers']:
-        if answer['answer_confidence'] == 'yes':
-            ans = answer['answer']
+        if len(ans)>=5:
             break
+        if answer['answer_confidence'] == 'yes':
+            ans.append(answer['answer'])
     dataset_answ.append((iid, qid, ans))
 
 dataset = []    
