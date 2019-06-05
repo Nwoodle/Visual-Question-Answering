@@ -1,5 +1,5 @@
 #%%
-%matplotlib notebook
+# %matplotlib notebook
 import os
 import numpy as np
 import torch
@@ -25,12 +25,12 @@ import nntools as nt
 train_set = VQADataset()
 val_set = train_set
 #%%
-train_loader = td.DataLoader(train_set, batch_size=500, shuffle=True)
+train_loader = td.DataLoader(train_set, batch_size=1, shuffle=True)
 
 #%%
 vocab_size = train_set.get_vocabsize()
 VQA_model = VQANet(vocab_size)
-lr = 1e-3
+lr = 2e-3
 VQA_model = VQA_model.to(device)
 adam = torch.optim.Adam(VQA_model.parameters(), lr=lr)
 stats_manager = VQAStatsManager()
@@ -40,10 +40,10 @@ VQA_train = nt.Experiment(VQA_model, train_set, val_set, adam, stats_manager,
 def plot(exp, fig, axes):
     axes[0].clear()
     axes[1].clear()
-    axes[0].plot([exp.history[k][0]['loss'] for k in range(exp.epoch)],
+    axes[0].plot([exp.history[k]['loss'] for k in range(exp.epoch)],
                  label="traininng loss")
     # axes[0].plot([exp.history[k][1]['loss'] for k in range(exp.epoch)], label="exalution loss")
-    axes[1].plot([exp.history[k][0]['accuracy'] for k in range(exp.epoch)],label = 'training accuracy')
+    axes[1].plot([exp.history[k]['accuracy'] for k in range(exp.epoch)],label = 'training accuracy')
     # axes[1].plot([exp.history[k][1]['accuracy'] for k in range(exp.epoch)],label = 'evaluation accuracy')
     axes[0].legend()
     axes[1].legend()

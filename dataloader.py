@@ -15,6 +15,7 @@ import torchvision.transforms as transforms
 
 import config
 import utils
+import copy
 
 class VQADataset(td.Dataset):
 
@@ -37,18 +38,37 @@ class VQADataset(td.Dataset):
         if mode == "val":
             self.images_dir = os.path.join('mscoco', 'val2014')
             self.imageprefix = 'COCO_val2014_'
-            # self.data = #TODO
+            self.data_dir = "val_qna.json"
         
         with open(self.data_dir, 'r') as fd:
             self.data = json.load(fd)
-        self.data = self.data[1:5000]
+        self.data = self.data[1:4096]
         self.maxqlen = 0
         for annotation in self.data:
             if len(annotation[2])>self.maxqlen:
                 self.maxqlen = len(annotation[2])
         with open("vocab.json", 'r') as fd:
             self.vocab = json.load(fd)
+<<<<<<< HEAD
         
+=======
+        for qadata in self.data:
+            question = copy.copy(qadata[2])
+            qadata[2] = []
+            for qword in question:
+                try:
+                    qadata[2].append(self.vocab['question'][qword])
+                except:
+                    qadata[2].append(0)
+            try:
+                answer = copy.copy(qadata[3])
+                answer = answer.split(' ')
+                qadata[3] = self.vocab['answer'][answer[0]]
+            except:
+                qadata[3] = 0
+        
+
+>>>>>>> 93184b29d82cf14de76c5a03704c4e4d735920fe
 
 
     def __len__(self):
@@ -61,21 +81,27 @@ class VQADataset(td.Dataset):
     def __getitem__(self, idx):
         image_id = str(self.data[idx][0])
         image_name = self.imageprefix + image_id.zfill(12) + '.jpg'
-        question_word = self.data[idx][2]
-        answer_word = self.data[idx][3]
-        qlen = len(question_word)
-        question = []
-        for word in question_word:
-            question.append(self.vocab['question'][word])
+        # question_word = self.data[idx][2]
+        # answer_word = self.data[idx][3]
+        qlen = len(self.data[idx][2])
+        # question = []
+        # for word in question_word:
+        #     try:
+        #         question.append(self.vocab['question'][word])
+        #     except:
+        #         question.append(0)
+        question = self.data[idx][2]
         question = torch.tensor(question)
+        answer = self.data[idx][3]
         word_embeddings = nn.Embedding(len(self.vocab['question']), 512)
         question = word_embeddings(question)
-        question_padding = torch.zeros([self.maxqlen-qlen,512])
-        question = torch.cat((question_padding,question))
-        try:
-            answer = self.vocab['answer'][answer_word]
-        except:
-            answer = -1
+        question_padding = torch.zeros([self.maxqlen,512])
+        # question = torch.cat((question_padding,question))
+        question_padding[(self.maxqlen-qlen):,:] = question
+        # try:
+        #     answer = self.vocab['answer'][answer_word]
+        # except:
+        #     answer = -1
         answer = torch.tensor(answer)
         img_path = os.path.join(self.images_dir, image_name)
         img = Image.open(img_path)
@@ -87,7 +113,7 @@ class VQADataset(td.Dataset):
             ])
         v = transform(img)
         # print(v.size())
-        return v, question, answer
+        return v, question_padding, answer
     
     def get_vocabsize(self):
         return len(self.vocab['question'])

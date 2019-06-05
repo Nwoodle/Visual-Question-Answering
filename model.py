@@ -45,6 +45,7 @@ class VQANet(NNClassifier):
         self.imageclassifier = vgg.classifier
         num_ftrs = vgg.classifier[6].in_features
         self.imageclassifier[6] = nn.Linear(num_ftrs, 1024)
+        # self.vggout = nn.Linear(num_ftrs, 1024)
 
         # Output Channel
         self.combinefc = nn.Linear(1024,1000)
@@ -69,8 +70,9 @@ class VQANet(NNClassifier):
         # embeds = q[0,:,:]
         embeds = q
         # v = v[0,:,:]
-        lstmout, _ = self.lstm(embeds)
-        lstmout = lstmout[:,0,:]
+        _, (lstmout,_) = self.lstm(embeds)
+        lstmout = lstmout.squeeze(0)
+        # lstmout = lstmout[:,-1,:]
         # lstmout, _ = self.lstm(embeds.view(len(embeds), 1, -1))
         lstmout = self.lstmoutput(lstmout)
         # lstmout = lstmout.view(lstmout.size(0),-1)
@@ -80,6 +82,7 @@ class VQANet(NNClassifier):
         imageout = self.imagefeatures(v)
         imageout = imageout.view(imageout.size(0), -1)
         imageout = self.imageclassifier(imageout)
+        # imageout = self.vggout(imageout)
 
         # Combine two channel together
         combineout = lstmout * imageout
