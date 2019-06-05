@@ -10,8 +10,8 @@ import config
 import json
 import os
 
-qpath = os.path.join('C:\\Users\\johns\\285proj\\dataset','v2_OpenEnded_mscoco_val2014_questions.json')
-apath = os.path.join('C:\\Users\\johns\\285proj\\dataset','v2_mscoco_val2014_annotations.json')
+qpath = os.path.join('v2_OpenEnded_mscoco_val2014_questions.json')
+apath = os.path.join('v2_mscoco_val2014_annotations.json')
 savename = 'val_qna_multi.json'
 # questions
 with open(qpath ,'r') as f:
