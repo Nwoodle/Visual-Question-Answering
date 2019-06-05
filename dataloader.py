@@ -33,15 +33,15 @@ class VQADataset(td.Dataset):
         self.lstmdim = lstmdim
 
         if mode == "train":
-            self.images_dir = os.path.join('C:\\Users\\johns\\285proj\\dataset', 'train2014')
+            self.images_dir = os.path.join('mscoco', 'train2014')
             self.data_dir = "train_qna.json"
             self.imageprefix = 'COCO_train2014_'
         if mode == "test":
-            self.images_dir = os.path.join('C:\\Users\\johns\\285proj\\dataset', 'test2015')
+            self.images_dir = os.path.join('mscoco', 'test2015')
             self.imageprefix = 'COCO_test2015_'
             self.data_dir = "val_qna.json"
         if mode == "val":
-            self.images_dir = os.path.join('C:\\Users\\johns\\285proj\\dataset', 'val2014')
+            self.images_dir = os.path.join('mscoco', 'val2014')
             self.imageprefix = 'COCO_val2014_'
             self.data_dir = "val_qna.json"
         
