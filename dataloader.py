@@ -43,9 +43,7 @@ class VQADataset(td.Dataset):
         if mode == "val":
             self.images_dir = os.path.join('mscoco', 'val2014')
             self.imageprefix = 'COCO_val2014_'
-            # self.data_dir = "val_qna.json"
-            self.data_dir = "val_qna_multi.json"
-
+            self.data_dir = "val_qna.json"
         
         with open(self.data_dir, 'r') as fd:
             self.data = json.load(fd)
@@ -73,7 +71,10 @@ class VQADataset(td.Dataset):
             try:
                 answer = copy.copy(qadata[3])
                 answer = answer.split(' ')
-                qadata[3] = self.vocab['answer'][answer[0]]
+                if mode == 'train':
+                    qadata[3] = self.vocab['answer'][answer[0]]
+                else:
+                    qadata[3] = self.vocab['answer'][answer]
             except:
                 qadata[3] = 0
         
