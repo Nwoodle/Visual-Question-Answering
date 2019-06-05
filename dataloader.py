@@ -48,7 +48,7 @@ class VQADataset(td.Dataset):
                 self.maxqlen = len(annotation[2])
         with open("vocab.json", 'r') as fd:
             self.vocab = json.load(fd)
-
+        
 
 
     def __len__(self):
