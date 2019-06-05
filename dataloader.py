@@ -16,6 +16,8 @@ import torchvision.transforms as transforms
 import config
 import utils
 import copy
+import random
+
 
 from glove import word2embedding
 
@@ -45,7 +47,10 @@ class VQADataset(td.Dataset):
         
         with open(self.data_dir, 'r') as fd:
             self.data = json.load(fd)
+        random.shuffle(self.data)
         self.data = self.data[1:4096]
+        # data_len = len(self.data)
+        # self.data = self.data[np.random.choice(data_len, 4096, replace=False)]
         self.maxqlen = 0
         for annotation in self.data:
             if len(annotation[2])>self.maxqlen:

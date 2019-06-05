@@ -49,13 +49,13 @@ class VQANet(NNClassifier):
         # self.vggout = nn.Linear(num_ftrs, 1024)
 
         # Output Channel
-        self.combinefc = nn.Sequential(nn.Linear(1024, 1000),
-                                nn.ReLU(True),
-                                nn.Dropout(0.5))
+        # self.combinefc = nn.Sequential(nn.Linear(1024, 1000),
+                                # nn.ReLU(True))
+                                # nn.Dropout(0.5))
+        self.combinefc = nn.Linear(1024,1000)
 
-        # self.drop = nn.Dropout(0.5)
 
-        self.fc1 = nn.Linear(1000, 1000)
+        # self.fc1 = nn.Linear(1000, 1000)
 
     # def init_hidden(self):
 
@@ -95,7 +95,7 @@ class VQANet(NNClassifier):
         # Combine two channel together
         combineout = lstmout * imageout
         combineout = self.combinefc(combineout)
-        combineout = self.fc1(combineout)
+        # combineout = self.fc1(combineout)
         y = F.softmax(combineout, dim=0)
 
         return y
