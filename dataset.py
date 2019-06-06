@@ -119,16 +119,16 @@ class VQAFeatureDataset(Dataset):
         
         img_id2idx_list = list(img_id2idx.items())
         L = len(img_id2idx_list)
-        self.img_id2idx = dict(img_id2idx_list[:L//4])
+        self.img_id2idx = dict(img_id2idx_list[:L//2])
         #self.img_id2idx = img_id2idx
         print('loading features from h5 file')
         h5_path = os.path.join(dataroot, '%s36.hdf5' % name)
         with h5py.File(h5_path, 'r') as hf:
            
             features = hf.get('image_features')
-            self.features = np.array(features[:features.shape[0]//4])
+            self.features = np.array(features[:features.shape[0]//2])
             spatials = hf.get('spatial_features')
-            self.spatials = np.array(spatials[:spatials.shape[0]//4])
+            self.spatials = np.array(spatials[:spatials.shape[0]//2])
             assert features.shape[0] == spatials.shape[0]
 
         self.entries = _load_dataset(name, self.img_id2idx)
