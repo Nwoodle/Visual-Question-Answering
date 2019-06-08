@@ -143,9 +143,9 @@ class Experiment(object):
                  output_dir=None, batch_size=16, perform_validation_during_training=False):
 
         # Define data loaders
-        train_loader = td.DataLoader(train_set, batch_size=batch_size, shuffle=True,
+        self.train_loader = td.DataLoader(train_set, batch_size=batch_size, shuffle=True,
                                      drop_last=True, pin_memory=True)
-        val_loader = td.DataLoader(val_set, batch_size=batch_size, shuffle=False,
+        self.val_loader = td.DataLoader(val_set, batch_size=batch_size, shuffle=False,
                                    drop_last=True, pin_memory=True)
 
         # Initialize history

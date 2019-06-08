@@ -15,7 +15,14 @@ class NNClassifier(nt.NeuralNetwork):
         self.cross_entropy = nn.CrossEntropyLoss()
 
     def criterion(self, y, d):
-        return self.cross_entropy(y, d)
+        if d.size() == (40,5):
+            dt = torch.transpose(d,0,1)
+            ce = []
+            for i in range(5):
+                ce.append(self.cross_entropy(y,dt[i]))
+            return min(ce)
+        else:
+            return self.cross_entropy(y, d)
 
 class VQANet(NNClassifier):
 
@@ -113,9 +120,13 @@ class VQAStatsManager(nt.StatsManager):
         super(VQAStatsManager, self).accumulate(loss, y, d)
         _, l = torch.max(y, 1)
         # self.running_accuracy += torch.mean((l == d).float())
-        if isinstance(d, list):
-            print("in evaluation `accumulation`: ", d)
-            self.running_accuracy += torch.mean((l in d).float())
+        if d.size() == (40,5):
+            dt = torch.transpose(d,0,1)
+            accu = []
+            for i in range(5):
+                accu.append(torch.mean((l == dt[i]).float()))
+
+            self.running_accuracy += max(accu)
         else:
             self.running_accuracy += torch.mean((l == d).float())
 

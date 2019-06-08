@@ -69,13 +69,34 @@ class VQADataset(td.Dataset):
                 #     qadata[2].append(self.vocab['question'][qword])
                 # except:
                 #     qadata[2].append(0)
-
-            try:
+            if mode=='val':
                 answer = copy.copy(qadata[3])
-                answer = answer.split(' ')
-                qadata[3] = self.vocab['answer'][answer[0]]
-            except:
-                qadata[3] = 0
+                onehotqadata = []
+                for i in range(5):
+                # for one in answer:
+                    if i >= len(answer):
+                        onehotqadata.append(0)
+                        continue
+                    one = answer[i]
+                    one = one.split(' ')
+                    try:
+                        onehotqadata.append(self.vocab['answer'][one[0]])
+                    except:
+                        onehotqadata.append(0)
+                qadata[3] = onehotqadata
+            elif mode=='train':
+                try:
+                    answer = copy.copy(qadata[3])
+                    answer = answer.split(' ')
+                    qadata[3] = self.vocab['answer'][answer[0]]
+                except:
+                    qadata[3] = 0
+            # try:
+            #     answer = copy.copy(qadata[3])
+            #     answer = answer.split(' ')
+            #     qadata[3] = self.vocab['answer'][answer[0]]
+            # except:
+            #     qadata[3] = 0
         
 
 
