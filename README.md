@@ -39,11 +39,15 @@ already exist on the machine.
     1. ```eval_dset.pkl```
     2. ```model.pkl```
     3. ```model.pth```
+   
+5. [GloVe](http://nlp.stanford.edu/data/glove.6B.zip)
+
+    Download and extract all ```*.txt``` in ```lstm_cnn``` folder.
 
 ## Contents
 
-- ```DEMO.ipynb``` - demo for our model
-- ```TRAIN.ipynb``` - Run the baseline of VQA 2017 winner and create a model file
+- ```DEMO.ipynb``` - **Demo for our model**
+- ```TRAIN.ipynb``` - **trainning process of our model**
 - ```utils.py``` - Provide utilities of the project
 - ```train.py``` - Module used to train the model
 - ```language_model.py``` - Module implementing GRU language model
@@ -52,18 +56,17 @@ already exist on the machine.
 - ```classifier.py``` - Module for implementing forward propagation of the classifier
 - ```base_model.py``` - Module for creating a baseline model
 - ```attention.py``` - Module for introducing attention mechanism into the model 
-- lstm_cnn
-  - ```train_demo.ipynb``` - training demo of lstm_cnn
+- lstm_cnn *for comparison*
+  - ```v_preprocess.py``` - parse train data (questions and answers) to a json file **Run first for preprocessing vocabulary**
+  - ```v_preprocess_val.py``` - parse validation data to a json file (answer is a list instead of a single word) **Run first for preprocessing vocabulary**
+  - ```train_demo.ipynb``` - **training demo of lstm_cnn**
   - ```config.py``` - some global variables for paths and etc
   - ```dataloader.py``` - implemented dataloader that corresponds pictures with their questions and answers
   - ```glove.py``` - implemented a method to turn words into glove embedding
   - ```model.py``` - implemented the model used
   - ```nntools.py``` - provided NN tools (slightly modified)
-  - ```v_preprocess.py``` - parse train data (questions and answers) to a json file
-  - ```v_preprocess_val.py``` - parse validation data to a json file (answer is a list instead of a single word)
   - ```glove.6B.{dim}d.txt``` - required for ```glove.py```, change dimension as required: 50, 100 (recommended), 200, 300
   - ```train_qna.json``` - pretrained training set json file for quicker loading
-  - ```val_qna_multi.json``` - pretrained validation set json file for quicker loading
   - ```vocab.json``` - indexing json file for all the vocabulary in the training and validation set  
 - data
   - ```eval_dset.pkl``` (not included in the repo)
