@@ -28,6 +28,8 @@ already exist on the machine.
     
     ```conda install numpy```
     
+ https://drive.google.com/file/d/1XJpnBiQ6ZNIZ3ODosAvCqfsOtOvFvLo-/view?usp=sharing
+    
 ## Contents
 
 - ```demo.ipynb``` - demo for our model
