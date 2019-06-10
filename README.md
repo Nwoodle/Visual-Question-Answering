@@ -73,10 +73,11 @@ already exist on the machine.
   - ```model.pkl``` (not included in the repo)
   - ```model.pth``` (not included in the repo)
   - ```val36_imgid2idx.pkl```
+  - ```trainval_label2ans.pkl```
 
 - ```/datasets/ee285f-public/VQA2017``` (Located at DSMLP)
   - train2015 (not included in the repo)
   - val2014 (not included in the repo)
   - test2015 (not included in the repo)
-  - ```v2_OpenEnded_mscoco_train2014_questions.json``` (not included in the repo)
-  - ```v2_OpenEnded_mscoco_val2014_questions.json``` (not included in the repo)
+  - ```v2_OpenEnded_mscoco_train2014_questions.json```
+  - ```v2_OpenEnded_mscoco_val2014_questions.json```
